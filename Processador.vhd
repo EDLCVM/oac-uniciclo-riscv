@@ -6,7 +6,6 @@ use work.riscv_pkg.all;
 entity Processador is
 	port(
 		clock 		: in std_logic;
-<<<<<<< HEAD
 		saidaInstr 	: out std_logic_vector(31 downto 0);
 		
 		-- Sinais para ajudar na visualização do que ocorre dentro do processador
@@ -56,7 +55,6 @@ architecture comportamento of Processador is
 	signal d_immgen				: std_logic_vector(31 downto 0);
 	signal d_mux_b_ula			: std_logic_vector(31 downto 0);
 	
-	signal ctrl_regwrite 	: std_logic;
 	signal ctrl_alusrc 		: std_logic;
 	signal ctrl_memwrite 	: std_logic;
 	signal ctrl_aluop 		: Controle_ULA;
@@ -69,11 +67,6 @@ begin
 	
 	
 	-- Sinais que realmente serão do processador.
-
-<<<<<<< HEAD
-=======
-	
->>>>>>> master
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
 		entrada 	=> teste_pc,
