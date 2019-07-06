@@ -6,8 +6,28 @@ use work.riscv_pkg.all;
 entity Processador is
 	port(
 		clock 		: in std_logic;
-		PC_entrada 	: in std_logic_vector(7 downto 0);
-		saidaInstr 	: out std_logic_vector(31 downto 0)
+		saidaInstr 	: out std_logic_vector(31 downto 0);
+		
+		-- Sinais para ajudar na visualização do que ocorre dentro do processador
+		-- Sinais de controle
+		ctrl_memtoreg,
+		ctrl_memwrite,
+		ctrl_alusrc,
+		ctrl_regwrite 	: out std_logic;
+		
+		ALUOp 			: out Controle_ULA;
+		
+		-- Sinais de dados
+		entrada_xregs_r1,
+		entrada_xregs_r2,
+		entrada_xregs_rd,
+		entrada_A_ULA,
+		entrada_B_ULA,
+		saida_meminstrucao,
+		saida_ULA,
+		saida_memdados,
+		saida_mux_memdados : out std_logic_vector(31 downto 0)
+		
 	);
 end Processador;
 
@@ -23,8 +43,6 @@ architecture comportamento of Processador is
 	signal teste_saida			: std_logic_vector(31 downto 0);
 begin
 
-	teste_pc <= PC_entrada;
-	saidaInstr <= teste_saida;
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
 		entrada => teste_pc,

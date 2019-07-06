@@ -17,6 +17,11 @@ architecture comportamento of Processador_tb is
 	end component;
 	
 	signal clock 		: std_logic := '0';
+	
+	-- sinais pra visualizar internamente o processador
+	
+	-- ------------------------------------------------
+	
 	signal PC_entrada : std_logic_vector(7 downto 0);
 	signal saidaInstr : std_logic_vector(31 downto 0);
 	
