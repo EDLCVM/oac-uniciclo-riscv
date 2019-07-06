@@ -14,4 +14,16 @@ end Mux2x1;
 
 architecture comportamento of Mux2x1 is
 begin
+	process(seletor)
+	begin
+
+		if (seletor = '0') then
+			saida <= A;
+		elsif (seletor = '1') then
+			saida <= B;
+		else
+			saida <= X"00000000";
+		end if;
+
+	end process;
 end comportamento;
