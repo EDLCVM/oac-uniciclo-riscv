@@ -49,4 +49,19 @@ component meminstrucao is
 	);
 end component;
 
+component XREGS is
+	generic (WSIZE : natural := 32);
+	port (
+		clock, wren, rst	:  in std_logic;	
+		rs1, rs2, rd		:  in std_logic_vector(4 downto 0);
+		data					:  in std_logic_vector(WSIZE - 1 downto 0);
+		ro1, ro2				: out std_logic_vector(WSIZE - 1 downto 0));
+end component;
+
+component ImmGen is
+	port (
+		instrucao : in std_logic_vector(31 downto 0);
+		imm32 : out signed(31 downto 0));
+end component;
+
 end riscv_pkg;

@@ -14,7 +14,6 @@ entity Controle is
 		--JalR,			-- ativo caso seja uma instrução jalr
 		--Jal,			-- ativo caso seja uma instrução jal
 		--Lui,			-- ativo caso seja uma instrução lui
-		MemRead,		-- ativo para ler da memória de dados
 		MemtoReg,	-- 0 = resultado da ULA, 1 = resultado da memória de dados.
 		MemWrite,	-- ativo para escrever na memória de dados
 		ALUSrc,		-- 0 = resultado do registrador, 1 = imediato
@@ -31,7 +30,6 @@ begin
 	begin
 		-- Tipo R
 		if( opcode = "0110011" ) then
-			MemRead <= '0';
 			MemtoReg <= '0';
 			MemWrite <= '0';
 			ALUSrc <= '0';
@@ -40,7 +38,6 @@ begin
 		
 		-- Load Word
 		elsif ( opcode = "0000011" ) then
-			MemRead <= '1';
 			MemtoReg <= '1';
 			MemWrite <= '0';
 			ALUSrc <= '1';
