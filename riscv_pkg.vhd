@@ -3,6 +3,11 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 package riscv_pkg is
+
+-- Códigos enviados do controle principal para o controle da ULA.
+type Controle_ULA is (TIPO_R, ADD);
+
+-- Códigos enviados do controle da ULA para a ULA.
 type ULA_OP is (ADD_OP, SUB_OP, AND_OP,   OR_OP,  XOR_OP, SLL_OP, SRL_OP,
                 SRA_OP, SLT_OP, SLTU_OP, SGE_OP, SGEU_OP, SEQ_OP, SNE_OP);
 					 
@@ -13,6 +18,34 @@ component Adder
 	port (
 		A, B : in std_logic_vector(WSIZE - 1 downto 0);
 		saida : out std_logic_vector(WSIZE - 1 downto 0)
+	);
+end component;
+
+component PC is
+	generic (WSIZE : natural := 32);
+	port(
+		entrada :  in std_logic_vector(WSIZE - 1 downto 0);
+		saida	  : out std_logic_vector(WSIZE - 1 downto 0)
+	);
+end component;
+
+component memdados is
+	port(
+		address	:  in std_logic_vector (7 DOWNTO 0);
+		clock		:  in std_logic;
+		data		:  in std_logic_vector (31 DOWNTO 0);
+		wren		:  in std_logic;
+		q			: out std_logic_vector (31 DOWNTO 0)
+	);
+end component;
+
+component meminstrucao is
+	port(
+		address	:  in std_logic_vector (7 DOWNTO 0);
+		clock		:  in std_logic  := '1';
+		data		:  in std_logic_vector (31 DOWNTO 0);
+		wren		:  in std_logic ;
+		q			: out std_logic_vector (31 DOWNTO 0)
 	);
 end component;
 
