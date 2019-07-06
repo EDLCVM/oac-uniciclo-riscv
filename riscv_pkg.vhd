@@ -64,4 +64,20 @@ component ImmGen is
 		imm32 : out signed(31 downto 0));
 end component;
 
+component ULAControle is
+	port (
+		funct3		: in std_logic_vector(2 downto 0);
+		funct7		: in std_logic_vector(6 downto 0);
+		ControleOp 	: in Controle_ULA;
+		ALUOp 		: out ULA_OP
+	);
+end component;
+
+component AdderPC is
+	port (
+		A, B 		: in std_logic_vector(7 downto 0); 
+		saida 	: out std_logic_vector(7 downto 0)
+	);
+end component;
+
 end riscv_pkg;

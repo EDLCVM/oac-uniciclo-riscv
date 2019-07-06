@@ -6,27 +6,13 @@ use work.riscv_pkg.all;
 entity Processador is
 	port(
 		clock 		: in std_logic;
-<<<<<<< HEAD
 		saidaInstr 	: out std_logic_vector(31 downto 0);
+		xregs_rst	: in std_logic;
 		
 		-- Sinais para ajudar na visualização do que ocorre dentro do processador
 		-- Sinais de controle
-		ctrl_memtoreg,
-		ctrl_memwrite,
-		ctrl_alusrc,
-		ctrl_regwrite 	: out std_logic;
-		
-		ALUOp 			: out Controle_ULA;
 		
 		-- Sinais de dados
-		entrada_xregs_r1,
-		entrada_xregs_r2,
-		entrada_xregs_rd,
-		entrada_A_ULA,
-		entrada_B_ULA,
-		saida_meminstrucao,
-		saida_ULA,
-		saida_memdados,
 		saida_mux_memdados : out std_logic_vector(31 downto 0)
 	);
 end Processador;
@@ -55,6 +41,8 @@ architecture comportamento of Processador is
 	signal d_mux_memdados		: std_logic_vector(31 downto 0);
 	signal d_immgen				: std_logic_vector(31 downto 0);
 	signal d_mux_b_ula			: std_logic_vector(31 downto 0);
+	signal d_adder_mux_branch  : std_logic_vector(31 downto 0);
+	signal d_entrada_pc			: std_logic_vector(7 downto 0);
 	
 	signal ctrl_regwrite 	: std_logic;
 	signal ctrl_alusrc 		: std_logic;
@@ -62,21 +50,16 @@ architecture comportamento of Processador is
 	signal ctrl_aluop 		: Controle_ULA;
 	signal ctrl_memtoreg 	: std_logic;
 	signal ctrl_branch 		: std_logic;
+	signal ctrl_ctrlula		: ULA_OP;
 	
-begin
-	-- Apenas para debbugar no modelsim.
-	teste_pc 		<= PC_entrada;
-	
-	
+begin	
 	-- Sinais que realmente serão do processador.
-
-<<<<<<< HEAD
-=======
 	
->>>>>>> master
+	saida_mux_memdados <= d_mux_memdados;
+
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
-		entrada 	=> teste_pc,
+		entrada 	=> d_entrada_pc,
 		saida 	=> d_pc_meminstrucao
 	);
 
@@ -89,12 +72,12 @@ begin
 	);
 	
 	controle: entity work.Controle port map (
-		Opcode => d_meminstrucao(6 downto 0),
+		Opcode 	=> d_meminstrucao(6 downto 0),
 		MemtoReg => ctrl_memtoreg,
 		MemWrite => ctrl_memwrite,
-		ALUSrc => ctrl_alusrc,
+		ALUSrc 	=> ctrl_alusrc,
 		RegWrite => ctrl_regwrite,
-		ALUOp => ctrl_aluop
+		ALUOp 	=> ctrl_aluop
 	);
 	
 	xregs: entity work.XREGS port map (
@@ -110,38 +93,59 @@ begin
 	);
 	
 	ula: entity work.ULA port map (
-		opcode => ADD_OP, -- MUDAR. Quando adicionar o controle da ULA
-		A 		=> d_xregs_ro1,
-		B 		=> d_mux_b_ula,
-		Z 		=> d_ula_saida,
-		zero 	=> d_ula_zero
+		opcode 	=> ctrl_ctrlula, -- MUDAR. Quando adicionar o controle da ULA
+		A 			=> d_xregs_ro1,
+		B 			=> d_mux_b_ula,
+		Z 			=> d_ula_saida,
+		zero 		=> d_ula_zero
 	);
 	
 	memdados: entity work.memdados port map (
-		address => d_ula_saida(7 downto 0),
-		clock => clock,
-		data => d_xregs_ro2,
-		wren => ctrl_memwrite,
-		q	=> d_memdados
+		address 	=> d_ula_saida(7 downto 0),
+		clock 	=> clock,
+		data 		=> d_xregs_ro2,
+		wren 		=> ctrl_memwrite,
+		q			=> d_memdados
 	);
 	
 	mux_mem_dados: entity work.Mux2x1 port map (
-		seletor => ctrl_memtoreg,
-		A => d_memdados,
-		B => d_ula_saida,
-		saida => d_mux_memdados
+		seletor 	=> ctrl_memtoreg,
+		A 			=> d_memdados,
+		B 			=> d_ula_saida,
+		saida 	=> d_mux_memdados
 	);
 	
 	immgen: entity work.ImmGen port map (
-		instrucao => d_meminstrucao,
-		imm32 => d_immgen
+		instrucao 	=> d_meminstrucao,
+		imm32 		=> d_immgen
 	);
 	
 	mux_b_ula: entity work.Mux2x1 port map (
-		seletor => ctrl_alusrc,
-		A => d_xregs_ro2,
-		B => d_immgen,
-		saida => d_mux_b_ula
+		seletor 	=> ctrl_alusrc,
+		A 			=> d_xregs_ro2,
+		B 			=> d_immgen,
+		saida 	=> d_mux_b_ula
+	);
+	
+	controle_ula: entity work.ULAControle port map (
+		funct3		=> d_meminstrucao(14 downto 12),
+		funct7		=> d_meminstrucao(31 downto 25),
+		ControleOp 	=> ctrl_aluop,
+		ALUOp 		=> ctrl_ctrlula
+	);
+	
+	adder4_pc: entity work.AdderPC port map (
+		A		=> d_pc_meminstrucao,
+		B  	=> "00000100", -- 4
+		saida => d_adder_mux_branch
+	);
+	
+	-- MUDAR quando implementar Branch!
+	mux_pc4_branch: entity work.Mux2x1_PC port map (
+		seletor => '0',
+		A => d_adder_mux_branch,
+		B => X"00000000",
+		saida => d_entrada_pc
 	);
 	
 end comportamento;

@@ -73,4 +73,6 @@ set_global_assignment -name VHDL_FILE XREGS.vhd
 set_global_assignment -name VHDL_FILE ULA.vhd
 set_global_assignment -name QIP_FILE memdados.qip
 set_global_assignment -name VHDL_FILE ImmGen.vhd
+set_global_assignment -name VHDL_FILE AdderPC.vhd
+set_global_assignment -name VHDL_FILE Mux2x1_PC.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
