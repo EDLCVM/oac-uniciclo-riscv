@@ -14,10 +14,20 @@ end ULAControle;
 
 architecture comportamento of ULAControle is
 begin
-	process(ControleOp)
+	process(ControleOp, funct3, funct7)
 	begin
-		if( ControleOp = ADD ) then
+		if (ControleOp = TIPO_R and funct7="0000000" and funct3="000") then
 			ALUOp <= ADD_OP;
+			
+		elsif(ControleOp = TIPO_R and funct7="0100000" and funct3="000") then
+			ALUOP <= SUB_OP;
+			
+		elsif(ControleOp = TIPO_R and funct7="0000000" and funct3="111") then
+			ALUOP <= AND_OP;
+			
+		elsif(ControleOp = TIPO_R and funct7="0000000" and funct3="110") then
+			ALUOP <= OR_OP;
+			
 		end if;
 	end process;
 end comportamento;

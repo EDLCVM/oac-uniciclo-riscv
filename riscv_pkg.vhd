@@ -4,10 +4,10 @@ use ieee.numeric_std.all;
 
 package riscv_pkg is
 
--- Códigos enviados do controle principal para o controle da ULA.
-type Controle_ULA is (FUNCT3_FUNCT7, ADD);
+-- CÃ³digos enviados do controle principal para o controle da ULA.
+type Controle_ULA is (FUNCT3_FUNCT7, JUMP, TIPO_R);
 
--- Códigos enviados do controle da ULA para a ULA.
+-- CÃ³digos enviados do controle da ULA para a ULA.
 type ULA_OP is (ADD_OP, SUB_OP, AND_OP,   OR_OP,  XOR_OP, SLL_OP, SRL_OP,
                 SRA_OP, SLT_OP, SLTU_OP, SGE_OP, SGEU_OP, SEQ_OP, SNE_OP);
 					 
