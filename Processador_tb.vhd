@@ -65,10 +65,10 @@ end component;
 			entrada_xregs_rd		=> entrada_xregs_rd
 		);
 		
-		clock <= '1' after 20 ps when clock = '0' else
-					'0' after 20 ps when clock = '1';
+		clock <= '1' after 4 ps when clock = '0' else
+					'0' after 4 ps when clock = '1';
 		
-		clockMem <= '1' after 2 ps when clock = '0' else
-						'0' after 2 ps when clock = '1';
+		clockMem <= '1' after 1 ps when clockMem = '0' else
+						'0' after 1 ps when clockMem = '1';
 
 end comportamento;

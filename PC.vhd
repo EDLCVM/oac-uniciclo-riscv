@@ -5,8 +5,8 @@ use ieee.numeric_std.all;
 entity PC is
 	port(
 		clock   :  in std_logic;
-		entrada :  in std_logic_vector(7 downto 0) := "00000000";
-		saida	  : out std_logic_vector(7 downto 0) := "00000000"
+		entrada :  in std_logic_vector(7 downto 0);
+		saida	  : out std_logic_vector(7 downto 0)
 	);
 end PC;
 

@@ -7,7 +7,7 @@ Para ajudar na visualização de como está ficando o processador. Após compila
 |Instrução|Situação|
 |--|--|
 |add|:heavy_multiplication_x:|
-|addi|:heavy_multiplication_x:|
+|addi|:heavy_check_mark:|
 |sub|:heavy_multiplication_x:|
 |and|:heavy_multiplication_x:|
 |andi|:heavy_multiplication_x:|
