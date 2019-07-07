@@ -6,7 +6,7 @@ entity ImmGen is
 	generic (WSIZE : natural := 32);
 	port (
 		instrucao 	:  in std_logic_vector(WSIZE - 1 downto 0);
-		imm32 		: out std_logic_vector(WSIZE - 1 downto 0)
+		imm32 		: out std_logic_vector(WSIZE - 1 downto 0) := X"00000000"
 );
 end ImmGen;
 
@@ -15,7 +15,7 @@ architecture comportamento of ImmGen is
 signal opcode  : std_logic_vector(6 downto 0);
 
 begin
-	process(opcode, instrucao)
+	process(instrucao)
 	begin
 	opcode <= instrucao(6 downto 0);
 	

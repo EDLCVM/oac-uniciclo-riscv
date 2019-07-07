@@ -14,7 +14,7 @@ end Mux2x1_PC;
 
 architecture comportamento of Mux2x1_PC is
 begin
-	process(seletor)
+	process(seletor, A, B)
 	begin
 
 		if (seletor = '0') then

@@ -66,13 +66,13 @@ set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -sectio
 set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH Processador_tb -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME Processador_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME i1 -section_id Processador_tb
-set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "100 ps" -section_id Processador_tb
+set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "500 ps" -section_id Processador_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME Processador_tb -section_id Processador_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE Processador_tb.vhd -section_id Processador_tb
 set_global_assignment -name VHDL_FILE XREGS.vhd
 set_global_assignment -name VHDL_FILE ULA.vhd
 set_global_assignment -name QIP_FILE memdados.qip
 set_global_assignment -name VHDL_FILE ImmGen.vhd
 set_global_assignment -name VHDL_FILE AdderPC.vhd
 set_global_assignment -name VHDL_FILE Mux2x1_PC.vhd
+set_global_assignment -name EDA_TEST_BENCH_FILE Processador_tb.vhd -section_id Processador_tb
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

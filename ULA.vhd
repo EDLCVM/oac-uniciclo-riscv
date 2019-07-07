@@ -16,14 +16,15 @@ end ULA;
 architecture comportamento of ULA is
 	
 	-- sinal interno. Z não pode ser lido
-	signal resultado : std_logic_vector(WSIZE-1 downto 0);
+	signal resultado : std_logic_vector(WSIZE-1 downto 0) := X"00000000";
 	constant um_32   : std_logic_vector := X"00000001";
 	constant zero_32 : std_logic_vector := X"00000000";
 begin
-process(A, B, opcode)
+process(opcode, A, B)
 begin
-	Z <= resultado;
 
+	Z <= resultado;
+	
 	case opcode is
 		when ADD_OP =>
 			resultado <= std_logic_vector(signed(A) + signed(B));
@@ -43,39 +44,39 @@ begin
 			resultado <= std_logic_vector(shift_right(signed(A), to_integer(unsigned(B))));
 		when SLT_OP =>
 			if ( signed(A) < signed(B) ) then
-				Z <= um_32;
+				resultado <= um_32;
 			else
-				Z <= zero_32;
+				resultado <= zero_32;
 			end if;
 		when SLTU_OP =>
 			if ( unsigned(A) < unsigned(B) ) then
-				Z <= um_32;
+				resultado <= um_32;
 			else
 				Z <= zero_32;
 			end if;
 		when SGE_OP =>
 			if ( signed(A) >= signed(B) ) then
-				Z <= um_32;
+				resultado <= um_32;
 			else
-				Z <= zero_32;
+				resultado <= zero_32;
 			end if;
 		when SGEU_OP =>
 			if ( unsigned(A) >= unsigned(B) ) then
-				Z <= um_32;
+				resultado <= um_32;
 			else
-				Z <= zero_32;
+				resultado <= zero_32;
 			end if;
-		when SEQ_OP =>
-			if ( A = B ) then
-				Z <= um_32;
-			else
-				Z <= zero_32;
-			end if;
+		--when SEQ_OP =>
+			--if ( A = B ) then
+				--resultado <= um_32;
+			--else
+				--resultado <= zero_32;
+			--end if;
 		when SNE_OP =>
 			if ( A /= B ) then
-				Z <= um_32;
+				resultado <= um_32;
 			else
-				Z <= zero_32;
+				resultado <= zero_32;
 			end if;
 		when others =>
 	end case;
