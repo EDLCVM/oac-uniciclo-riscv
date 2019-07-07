@@ -20,7 +20,7 @@ architecture comp of XREGS is
 
 	begin
 	-- leitura dos registradores
-	ro1 <= X"00000000" when (rs1 = "00000") else xreg(to_integer(unsigned(rs1)));
+	ro1 <= x"00000000" when (rs1 = "00000") else xreg(to_integer(unsigned(rs1)));
 	ro2 <= x"00000000" when (rs2 = "00000") else xreg(to_integer(unsigned(rs2)));
 	
 	process(clock)

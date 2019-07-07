@@ -11,6 +11,7 @@ architecture comportamento of Processador_tb is
 component Processador is
 	port(
 		clock 					: in std_logic;
+		clockMem					: in std_logic;
 		saidaInstr 				: out std_logic_vector(31 downto 0);
 
 		saida_pc		: out std_logic_vector(7 downto 0);
@@ -28,6 +29,7 @@ component Processador is
 end component;
 	
 	signal clock 		: std_logic := '0';
+	signal clockMem	: std_logic := '0';
 	
 	-- sinais pra visualizar internamente o processador
 	
@@ -49,6 +51,7 @@ end component;
 		i1 : Processador
 		port map (
 			clock 					=> clock,
+			clockMem					=> clockMem,
 			saidaInstr 				=> saidaInstr,
 			saida_mux_memdados 	=> saida_memdados,
 			saida_pc 				=> saida_pc,
@@ -62,13 +65,10 @@ end component;
 			entrada_xregs_rd		=> entrada_xregs_rd
 		);
 		
-		init: process
-			begin
-			clock <= '0';
-			wait for 10 ps;
-			clock <= '1';
-			wait for 10 ps;
-			
-		end process init;
+		clock <= '1' after 20 ps when clock = '0' else
+					'0' after 20 ps when clock = '1';
+		
+		clockMem <= '1' after 2 ps when clock = '0' else
+						'0' after 2 ps when clock = '1';
 
 end comportamento;

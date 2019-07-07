@@ -15,12 +15,12 @@ end ULA;
 
 architecture comportamento of ULA is
 	
-	-- sinal interno. Z não pode ser lido
+	-- sinal interno. Z nÃ£o pode ser lido
 	signal resultado : std_logic_vector(WSIZE-1 downto 0) := X"00000000";
 	constant um_32   : std_logic_vector := X"00000001";
 	constant zero_32 : std_logic_vector := X"00000000";
 begin
-process(opcode, A, B)
+process(opcode, A, B, resultado)
 begin
 
 	Z <= resultado;
@@ -52,7 +52,7 @@ begin
 			if ( unsigned(A) < unsigned(B) ) then
 				resultado <= um_32;
 			else
-				Z <= zero_32;
+				resultado <= zero_32;
 			end if;
 		when SGE_OP =>
 			if ( signed(A) >= signed(B) ) then

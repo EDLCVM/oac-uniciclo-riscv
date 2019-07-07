@@ -12,10 +12,15 @@ end Adder;
 
 architecture comportamento of Adder is
 
+	signal resultado : std_logic_vector(31 downto 0) := X"00000000";
+	
 	begin
+	
+	saida <= resultado;
+	
 	process(A, B)
 		begin
-		saida <= std_logic_vector(signed(A) + signed(B));
+		resultado <= std_logic_vector(signed(A) + signed(B));
 	end process;
 
 end comportamento;

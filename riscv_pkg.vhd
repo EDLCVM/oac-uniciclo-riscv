@@ -22,10 +22,10 @@ component Adder
 end component;
 
 component PC is
-	generic (WSIZE : natural := 32);
 	port(
-		entrada :  in std_logic_vector(WSIZE - 1 downto 0);
-		saida	  : out std_logic_vector(WSIZE - 1 downto 0)
+		clock   :  in std_logic;
+		entrada :  in std_logic_vector(7 downto 0) := "00000000";
+		saida	  : out std_logic_vector(7 downto 0) := "00000000"
 	);
 end component;
 

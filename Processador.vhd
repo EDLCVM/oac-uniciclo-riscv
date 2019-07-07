@@ -6,6 +6,7 @@ use work.riscv_pkg.all;
 entity Processador is
 	port(
 		clock 		: in std_logic;
+		clockMem		: in std_logic;
 		saidaInstr 	: out std_logic_vector(31 downto 0);
 		
 		-- Sinais para ajudar na visualização do que ocorre dentro do processador
@@ -49,6 +50,7 @@ architecture comportamento of Processador is
 	signal d_mux_b_ula			: std_logic_vector(31 downto 0);
 	signal d_adder_mux_branch  : std_logic_vector(31 downto 0);
 	signal d_entrada_pc			: std_logic_vector(7 downto 0);
+	signal d_saida_pc_4			: std_logic_vector(7 downto 0); -- saida dividida por 4
 
 	signal ctrl_regwrite 	: std_logic 		:= '0';
 	signal ctrl_alusrc 		: std_logic 		:= '0';
@@ -82,15 +84,18 @@ begin
 	
 	entrada_xregs_rd <= d_meminstrucao(11 downto 7);
 	
+	d_saida_pc_4 <= std_logic_vector(unsigned(d_pc_meminstrucao) / 4);
+	
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
+		clock    => clock,
 		entrada 	=> d_entrada_pc,
 		saida 	=> d_pc_meminstrucao
 	);
 
 	meminstrucao: entity work.meminstrucao port map (
-		address 	=> d_pc_meminstrucao,
-		clock 	=> clock,
+		address 	=> d_saida_pc_4,
+		clock 	=> clockMem,
 		data 		=> X"00000000",	-- instruções já são carregadas em um arquivo.
 		wren 		=> '0',				-- instruções já são carregadas em um arquivo.
 		q 			=> d_meminstrucao
@@ -126,7 +131,7 @@ begin
 	
 	memdados: entity work.memdados port map (
 		address 	=> d_ula_saida(7 downto 0),
-		clock 	=> clock,
+		clock 	=> clockMem,
 		data 		=> d_xregs_ro2,
 		wren 		=> ctrl_memwrite,
 		q			=> d_memdados
