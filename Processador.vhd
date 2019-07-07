@@ -49,7 +49,7 @@ architecture comportamento of Processador is
 	signal d_mux_b_ula			: std_logic_vector(31 downto 0);
 	signal d_adder_mux_branch  : std_logic_vector(31 downto 0);
 	signal d_entrada_pc			: std_logic_vector(7 downto 0);
-	
+
 	signal ctrl_regwrite 	: std_logic 		:= '0';
 	signal ctrl_alusrc 		: std_logic 		:= '0';
 	signal ctrl_memwrite 	: std_logic 		:= '0';
@@ -82,7 +82,6 @@ begin
 	
 	entrada_xregs_rd <= d_meminstrucao(11 downto 7);
 	
-
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
 		entrada 	=> d_entrada_pc,
