@@ -2,7 +2,8 @@
 Implementação do processador uniciclo com arquitetura RISC-V
 
 # Dicas
-Para ajudar na visualização de como está ficando o processador. Após compilar no Quartus, abrir: `Tools > Netlist Viewers > RTL Viewer`
+Para ajudar na visualização de como está ficando o processador. Após compilar no Quartus, abrir: 
+`Tools > Netlist Viewers > RTL Viewer`
 
 |Instrução|Situação|
 |--|--|
@@ -10,19 +11,19 @@ Para ajudar na visualização de como está ficando o processador. Após compila
 |addi|:heavy_check_mark:|
 |sub|:heavy_multiplication_x:|
 |and|:heavy_multiplication_x:|
-|andi|:heavy_multiplication_x:|
+|andi|:heavy_check_mark:|
 |lui|:heavy_multiplication_x:|
 |slt|:heavy_multiplication_x:|
 |or|:heavy_multiplication_x:|
-|ori|:heavy_multiplication_x:|
+|ori|:heavy_check_mark:|
 |xor|:heavy_multiplication_x:|
-|xori|:heavy_multiplication_x:|
-|slli|:heavy_multiplication_x:|
-|srli|:heavy_multiplication_x:|
-|srai|:heavy_multiplication_x:|
-|slti|:heavy_multiplication_x:|
+|xori|:heavy_check_mark:|
+|slli|:heavy_check_mark:|
+|srli|:heavy_check_mark:|
+|srai|:heavy_check_mark:|
+|slti|:heavy_check_mark:|
 |sltu|:heavy_multiplication_x:|
-|sltui|:heavy_multiplication_x:|
+|sltui|:heavy_check_mark:|
 |jal|:heavy_multiplication_x:|
 |jalr|:heavy_multiplication_x:|
 |beq|:heavy_multiplication_x:|

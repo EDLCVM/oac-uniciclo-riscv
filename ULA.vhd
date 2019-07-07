@@ -66,12 +66,12 @@ begin
 			else
 				resultado <= zero_32;
 			end if;
-		--when SEQ_OP =>
-			--if ( A = B ) then
-				--resultado <= um_32;
-			--else
-				--resultado <= zero_32;
-			--end if;
+		when SEQ_OP =>
+			if ( A = B ) then
+				resultado <= um_32;
+			else
+				resultado <= zero_32;
+			end if;
 		when SNE_OP =>
 			if ( A /= B ) then
 				resultado <= um_32;

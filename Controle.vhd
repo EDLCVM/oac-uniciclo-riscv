@@ -40,12 +40,12 @@ begin
 		-- elsif ( opcode = "0000011" ) then
 			
 		-- Tipo I
-		elsif ( opcode = "0010011") then
+		elsif ( opcode = "0010011" ) then
 			MemtoReg <= '1';
 			MemWrite <= '0';
 			ALUSrc <= '1';
 			RegWrite <= '1';
-			ALUOp <= FUNCT3_FUNCT7;
+			ALUOp <= TIPO_I;
 		
 		-- Tipo U
 		--elsif ( opcode = "0110111" ) then

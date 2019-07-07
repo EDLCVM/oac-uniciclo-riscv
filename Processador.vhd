@@ -7,23 +7,35 @@ entity Processador is
 	port(
 		clock 		: in std_logic;
 		clockMem		: in std_logic;
+
+		-- Sinais para ajudar na visualização do que ocorre dentro do processador
+		saida_pc		: out std_logic_vector(7 downto 0);
 		saidaInstr 	: out std_logic_vector(31 downto 0);
 		
-		-- Sinais para ajudar na visualização do que ocorre dentro do processador
 		-- Sinais de controle
+		ctr_memtoreg,
+		ctr_memwrite,
+		ctr_alusrc,
+		ctr_regwrite : out std_logic;
+		ctr_aluop	 : out Controle_ULA;
+		ctr_operacao_ULA : out ULA_OP;
 		
-		-- Sinais de dados
-		saida_pc		: out std_logic_vector(7 downto 0);
+		saida_adderpc4,
+		saida_adderpcimm,
+		entrada_xregs_data,
 		
-		saida_mux_memdados,
-		saida_ula	: out std_logic_vector(31 downto 0);
-		entrada_ula_op : out ULA_OP;
-		entrada_ula_A,
-	   entrada_ula_B		: out std_logic_vector(31 downto 0);
-		sinal_ctrl_alusrc	: out std_logic;
-		saida_genimm32		: out std_logic_vector(31 downto 0);
-		entrada_dado_xregs : out std_logic_vector(31 downto 0);
-		entrada_xregs_rd 	: out std_logic_vector(4 downto 0)
+		saida_xregs_ro1,
+		saida_xregs_ro2,
+		saida_genimm32,
+		
+		entrada_ula_B,
+		saida_ula,
+		
+		saida_mux_memdados 	: out std_logic_vector(31 downto 0);
+		
+		entrada_xregs_rs1,
+		entrada_xregs_rs2,
+		entrada_xregs_rd : out std_logic_vector(4 downto 0)
 	);
 end Processador;
 
@@ -38,8 +50,8 @@ architecture comportamento of Processador is
 	-- Pode colocar o nome da saida do bloco fonte também.
 	-- Sinal de dado: d_<bloco-fonte>
 	
-	signal d_pc_meminstrucao 	: std_logic_vector(7 downto 0) 	:= X"00";
-	signal d_meminstrucao		: std_logic_vector(31 downto 0) 	:= X"00000000";
+	signal d_pc_meminstrucao 	: std_logic_vector(7 downto 0);
+	signal d_meminstrucao		: std_logic_vector(31 downto 0);
 	signal d_xregs_ro1			: std_logic_vector(31 downto 0);
 	signal d_xregs_ro2			: std_logic_vector(31 downto 0);
 	signal d_ula_saida			: std_logic_vector(31 downto 0);
@@ -60,27 +72,37 @@ architecture comportamento of Processador is
 	signal ctrl_branch 		: std_logic			:= '0';
 	signal ctrl_ctrlula		: ULA_OP;
 	
-begin	
+begin
 
-	saida_ula <= d_ula_saida;
-
-	-- Sinais que realmente serão do processador.
-	saida_mux_memdados <= d_mux_memdados;
-	
 	saida_pc <= d_pc_meminstrucao;
-	
 	saidaInstr <= d_meminstrucao;
 	
-	entrada_ula_op <= ctrl_ctrlula;
+	-- ---------- Sinais que saem do processador para o wave ----------
+	-- Controle:
+	ctr_memtoreg 	<= ctrl_memtoreg;
+	ctr_memwrite 	<= ctrl_memwrite;
+	ctr_alusrc		<= ctrl_alusrc;
+	ctr_regwrite	<= ctrl_regwrite;
+	ctr_aluop		<= ctrl_aluop;
+	ctr_operacao_ULA  <= ctrl_ctrlula;
 	
-	entrada_ula_A <= d_xregs_ro1;
-	entrada_ula_B <= d_mux_b_ula;
+	-- Dados
+	saida_adderpc4 <= d_adder_mux_branch;
 	
-	sinal_ctrl_alusrc	<= ctrl_alusrc;
-	
+			
+	-- saida_adderpcimm Não tem esse adder ainda,
+	entrada_xregs_data <= d_mux_memdados;
+		
+	saida_xregs_ro1 <= d_xregs_ro1;
+	saida_xregs_ro2 <= d_xregs_ro2;
 	saida_genimm32 <= d_immgen;
+		
+	entrada_ula_B <= d_mux_b_ula;
+	saida_ula <= d_ula_saida;
+	saida_mux_memdados <= d_mux_memdados;
 	
-	entrada_dado_xregs <= d_mux_memdados;
+	entrada_xregs_rs1 <= d_meminstrucao(19 downto 15);
+	entrada_xregs_rs2 <= d_meminstrucao(24 downto 20);
 	
 	entrada_xregs_rd <= d_meminstrucao(11 downto 7);
 	
