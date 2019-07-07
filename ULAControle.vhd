@@ -28,6 +28,20 @@ begin
 		elsif(ControleOp = TIPO_R and funct7="0000000" and funct3="110") then
 			ALUOP <= OR_OP;
 			
+		elsif(ControleOp = TIPO_R and funct7="0000000" and funct3="100") then
+			ALUOP <= XOR_OP;
+			
+		elsif(ControleOp = TIPO_R and funct7="0000000" and funct3="001") then
+			ALUOP <= SLL_OP;	
+
+		elsif(ControleOp = TIPO_R and funct7="0000000" and funct3="101") then
+			ALUOP <= SRL_OP;			
+			
+		elsif(ControleOp = TIPO_R and funct7="0000000" and funct3="011") then
+			ALUOP <= SLTU_OP;			
+		
+			
+			
 		end if;
 	end process;
 end comportamento;
