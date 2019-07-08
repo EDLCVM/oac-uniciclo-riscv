@@ -65,7 +65,6 @@ architecture comportamento of Processador is
 	signal d_entrada_pc					: std_logic_vector(7 downto 0);
 	signal d_saida_pc_4					: std_logic_vector(7 downto 0); -- saida dividida por 4
 	signal d_saida_adder_pc_offset 	: std_logic_vector(31 downto 0);
-	signal d_saida_imm_shift_1			: std_logic_vector(31 downto 0);
 	signal d_pc_32_bits					: std_logic_vector(31 downto 0);
 
 	signal ctrl_regwrite 		: std_logic 		:= '0';
@@ -113,8 +112,6 @@ begin
 	entrada_xregs_rd <= d_meminstrucao(11 downto 7);
 	
 	d_saida_pc_4 <= std_logic_vector(unsigned(d_pc_meminstrucao) / 4);
-	
-	d_saida_imm_shift_1 <= std_logic_vector(shift_left(signed(d_immgen), 1));
 	
 	d_pc_32_bits <= std_logic_vector(resize(unsigned(d_pc_meminstrucao), 32));
 	
@@ -207,7 +204,6 @@ begin
 		saida 	=> d_mux_b_ula
 	);
 	
-	-- MUDAR quando implementar Branch!
 	mux_pc4_branch: entity work.Mux2x1_PC port map (
 		seletor => ctrl_seletor_mux_pc,
 		A => d_adder_mux_branch,
@@ -217,7 +213,7 @@ begin
 	
 	adderpc_shiftleft: entity work.Adder port map (
 		A => d_pc_32_bits,
-		B => d_saida_imm_shift_1,
+		B => d_immgen,
 		saida => d_saida_adder_pc_offset
 	);
 	

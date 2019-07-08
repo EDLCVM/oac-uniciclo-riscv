@@ -18,7 +18,7 @@ entity Controle is
 		MemWrite,	-- ativo para escrever na memória de dados
 		ALUSrc,		-- 0 = resultado do registrador, 1 = imediato
 		RegWrite		-- ativo para permitir escrita no banco de registradores	
-		: out std_logic;
+		: out std_logic := '0';
 		ALUOp 	: out Controle_ULA
 	);
 

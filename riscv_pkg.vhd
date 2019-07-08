@@ -80,4 +80,25 @@ component AdderPC is
 	);
 end component;
 
+component Controle is
+
+	port(
+		Opcode 	: in std_logic_vector(6 downto 0);
+		Branch,		-- ativo caso seja uma instrução beq
+		--BranchNE,	-- ativo caso seja uma instrução bne
+		--BranchLT		-- ativo caso seja uma instrução blt
+		--BranchGE,	-- ativo caso seja uma instrução bge
+		--JalR,			-- ativo caso seja uma instrução jalr
+		--Jal,			-- ativo caso seja uma instrução jal
+		--Lui,			-- ativo caso seja uma instrução lui
+		MemtoReg,	-- 0 = resultado da ULA, 1 = resultado da memória de dados.
+		MemWrite,	-- ativo para escrever na memória de dados
+		ALUSrc,		-- 0 = resultado do registrador, 1 = imediato
+		RegWrite		-- ativo para permitir escrita no banco de registradores	
+		: out std_logic := '0';
+		ALUOp 	: out Controle_ULA
+	);
+
+end component;
+
 end riscv_pkg;
