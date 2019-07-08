@@ -161,8 +161,8 @@ begin
 	
 	mux_mem_dados: entity work.Mux2x1 port map (
 		seletor 	=> ctrl_memtoreg,
-		A 			=> d_memdados,
-		B 			=> d_ula_saida,
+		A 			=> d_ula_saida,
+		B 			=> d_memdados,
 		saida 	=> d_mux_memdados
 	);
 	

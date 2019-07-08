@@ -37,15 +37,28 @@ begin
 			ALUOp <= TIPO_R;
 		
 		-- Load Word
-		-- elsif ( opcode = "0000011" ) then
-			
-		-- Tipo I
-		elsif ( opcode = "0010011" ) then
+		elsif ( opcode = "0000011" ) then
 			MemtoReg <= '1';
 			MemWrite <= '0';
 			ALUSrc <= '1';
 			RegWrite <= '1';
 			ALUOp <= TIPO_I;
+			
+		-- Tipo I
+		elsif ( opcode = "0010011" ) then
+			MemtoReg <= '0';
+			MemWrite <= '0';
+			ALUSrc <= '1';
+			RegWrite <= '1';
+			ALUOp <= TIPO_I;
+		
+		-- Tipo SW
+		elsif ( opcode = "0100011" ) then
+			MemtoReg <= '0'; -- don't care.
+			MemWrite <= '1'; 
+			ALUSrc <= '1';
+			RegWrite <= '0';
+			ALUOp <= TIPO_SW;
 		
 		-- Tipo U
 		--elsif ( opcode = "0110111" ) then

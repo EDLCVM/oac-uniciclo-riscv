@@ -45,6 +45,10 @@ begin
 			
 		end if;
 	end if;
+	
+	if ( ControleOp = TIPO_LW ) then
+		ALUOp <= ADD_OP;
+	end if;
 		
 	if ( ControleOp = TIPO_I ) then
 		case funct3 is
