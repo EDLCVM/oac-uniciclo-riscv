@@ -34,7 +34,7 @@ begin
 			MemWrite <= '0';
 			ALUSrc <= '0';
 			RegWrite <= '1';
-			ALUOp <= FUNCT3_FUNCT7;
+			ALUOp <= TIPO_R;
 		
 		-- Load Word
 		-- elsif ( opcode = "0000011" ) then

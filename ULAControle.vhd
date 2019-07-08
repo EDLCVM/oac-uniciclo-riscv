@@ -16,8 +16,33 @@ architecture comportamento of ULAControle is
 begin
 	process(ControleOp, funct3, funct7)
 	begin
-		if( ControleOp = ADD ) then
+	
+	if ( ControleOp = TIPO_R ) then
+	
+		if (funct7="0000000" and funct3="000") then
 			ALUOp <= ADD_OP;
+			
+		elsif(funct7="0100000" and funct3="000") then
+			ALUOP <= SUB_OP;
+			
+		elsif(funct7="0000000" and funct3="111") then
+			ALUOP <= AND_OP;
+			
+		elsif(funct7="0000000" and funct3="110") then
+			ALUOP <= OR_OP;
+			
+		elsif(funct7="0000000" and funct3="100") then
+			ALUOP <= XOR_OP;
+			
+		elsif(funct7="0000000" and funct3="001") then
+			ALUOP <= SLL_OP;	
+
+		elsif(funct7="0000000" and funct3="101") then
+			ALUOP <= SRL_OP;			
+			
+		elsif(funct7="0000000" and funct3="011") then
+			ALUOP <= SLTU_OP;
+			
 		end if;
 		
 		if ( ControleOp = TIPO_I ) then
