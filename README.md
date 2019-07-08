@@ -30,5 +30,5 @@ Para ajudar na visualização de como está ficando o processador. Após compila
 |bne|:heavy_multiplication_x:|
 |blt|:heavy_multiplication_x:|
 |bge|:heavy_multiplication_x:|
-|lw|:heavy_multiplication_x:|
-|sw|:heavy_multiplication_x:|
+|lw|:heavy_check_mark:|
+|sw|:heavy_check_mark:|
