@@ -13,15 +13,16 @@ entity Processador is
 		saidaInstr 	: out std_logic_vector(31 downto 0);
 		
 		-- Sinais de controle
+		ctr_branch,
 		ctr_memtoreg,
 		ctr_memwrite,
 		ctr_alusrc,
-		ctr_regwrite : out std_logic;
+		ctr_regwrite : out std_logic := '0';
 		ctr_aluop	 : out Controle_ULA;
 		ctr_operacao_ULA : out ULA_OP;
 		
 		saida_adderpc4,
-		saida_adderpcimm,
+		saida_adderpcshiftleft,
 		entrada_xregs_data,
 		
 		saida_xregs_ro1,
@@ -50,27 +51,31 @@ architecture comportamento of Processador is
 	-- Pode colocar o nome da saida do bloco fonte também.
 	-- Sinal de dado: d_<bloco-fonte>
 	
-	signal d_pc_meminstrucao 	: std_logic_vector(7 downto 0);
-	signal d_meminstrucao		: std_logic_vector(31 downto 0);
-	signal d_xregs_ro1			: std_logic_vector(31 downto 0);
-	signal d_xregs_ro2			: std_logic_vector(31 downto 0);
-	signal d_ula_saida			: std_logic_vector(31 downto 0);
-	signal d_ula_zero				: std_logic;
-	signal d_memdados				: std_logic_vector(31 downto 0);
-	signal d_mux_memdados		: std_logic_vector(31 downto 0);
-	signal d_immgen				: std_logic_vector(31 downto 0);
-	signal d_mux_b_ula			: std_logic_vector(31 downto 0);
-	signal d_adder_mux_branch  : std_logic_vector(31 downto 0);
-	signal d_entrada_pc			: std_logic_vector(7 downto 0);
-	signal d_saida_pc_4			: std_logic_vector(7 downto 0); -- saida dividida por 4
+	signal d_pc_meminstrucao 			: std_logic_vector(7 downto 0);
+	signal d_meminstrucao				: std_logic_vector(31 downto 0);
+	signal d_xregs_ro1					: std_logic_vector(31 downto 0);
+	signal d_xregs_ro2					: std_logic_vector(31 downto 0);
+	signal d_ula_saida					: std_logic_vector(31 downto 0);
+	signal d_ula_zero						: std_logic;
+	signal d_memdados						: std_logic_vector(31 downto 0);
+	signal d_mux_memdados				: std_logic_vector(31 downto 0);
+	signal d_immgen						: std_logic_vector(31 downto 0);
+	signal d_mux_b_ula					: std_logic_vector(31 downto 0);
+	signal d_adder_mux_branch  		: std_logic_vector(31 downto 0);
+	signal d_entrada_pc					: std_logic_vector(7 downto 0);
+	signal d_saida_pc_4					: std_logic_vector(7 downto 0); -- saida dividida por 4
+	signal d_saida_adder_pc_offset 	: std_logic_vector(31 downto 0);
+	signal d_saida_imm_shift_1			: std_logic_vector(31 downto 0);
+	signal d_pc_32_bits					: std_logic_vector(31 downto 0);
 
-	signal ctrl_regwrite 	: std_logic 		:= '0';
-	signal ctrl_alusrc 		: std_logic 		:= '0';
-	signal ctrl_memwrite 	: std_logic 		:= '0';
-	signal ctrl_aluop 		: Controle_ULA;
-	signal ctrl_memtoreg 	: std_logic			:= '0';
-	signal ctrl_branch 		: std_logic			:= '0';
-	signal ctrl_ctrlula		: ULA_OP;
+	signal ctrl_regwrite 		: std_logic 		:= '0';
+	signal ctrl_alusrc 			: std_logic 		:= '0';
+	signal ctrl_memwrite 		: std_logic 		:= '0';
+	signal ctrl_aluop 			: Controle_ULA;
+	signal ctrl_memtoreg 		: std_logic			:= '0';
+	signal ctrl_branch 			: std_logic			:= '0';
+	signal ctrl_ctrlula			: ULA_OP;
+	signal ctrl_seletor_mux_pc : std_logic;
 	
 begin
 
@@ -79,6 +84,7 @@ begin
 	
 	-- ---------- Sinais que saem do processador para o wave ----------
 	-- Controle:
+	ctr_branch     <= ctrl_branch;
 	ctr_memtoreg 	<= ctrl_memtoreg;
 	ctr_memwrite 	<= ctrl_memwrite;
 	ctr_alusrc		<= ctrl_alusrc;
@@ -108,6 +114,15 @@ begin
 	
 	d_saida_pc_4 <= std_logic_vector(unsigned(d_pc_meminstrucao) / 4);
 	
+	d_saida_imm_shift_1 <= std_logic_vector(shift_left(signed(d_immgen), 1));
+	
+	d_pc_32_bits <= std_logic_vector(resize(unsigned(d_pc_meminstrucao), 32));
+	
+	saida_adderpcshiftleft <= d_saida_adder_pc_offset;
+	
+	ctrl_seletor_mux_pc <= ctrl_branch and (d_ula_zero or d_ula_saida(0));
+	--ctrl_seletor_mux_pc <= '0';
+	
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
 		clock    => clock,
@@ -125,6 +140,7 @@ begin
 	
 	controle: entity work.Controle port map (
 		Opcode 	=> d_meminstrucao(6 downto 0),
+		Branch	=> ctrl_branch,
 		MemtoReg => ctrl_memtoreg,
 		MemWrite => ctrl_memwrite,
 		ALUSrc 	=> ctrl_alusrc,
@@ -193,10 +209,16 @@ begin
 	
 	-- MUDAR quando implementar Branch!
 	mux_pc4_branch: entity work.Mux2x1_PC port map (
-		seletor => '0',
+		seletor => ctrl_seletor_mux_pc,
 		A => d_adder_mux_branch,
-		B => X"00000000",
+		B => d_saida_adder_pc_offset,
 		saida => d_entrada_pc
+	);
+	
+	adderpc_shiftleft: entity work.Adder port map (
+		A => d_pc_32_bits,
+		B => d_saida_imm_shift_1,
+		saida => d_saida_adder_pc_offset
 	);
 	
 end comportamento;

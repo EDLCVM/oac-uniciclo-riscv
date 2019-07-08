@@ -93,5 +93,29 @@ begin
 
 			end case;
 		end if;
+		
+		-- Tipo B
+		if ( ControleOp = TIPO_B ) then
+			case funct3 is
+				-- BEQ
+				when "000" =>
+					ALUOP <= SUB_OP;
+			
+				-- BNE
+				when "001" =>
+					ALUOP <= SNE_OP;
+			
+				-- BLT
+				when "100" =>
+					ALUOp <= SLT_OP;
+			
+				-- BGE
+				when "101" =>
+					ALUOP <= SGE_OP;
+		
+				when others =>
+					ALUOP <= ADD_OP;
+			end case;
+		end if;
 	end process;
 end comportamento;

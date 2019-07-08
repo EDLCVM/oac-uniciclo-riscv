@@ -7,7 +7,7 @@ entity Controle is
 
 	port(
 		Opcode 	: in std_logic_vector(6 downto 0);
-		--Branch,		-- ativo caso seja uma instrução beq
+		Branch,		-- ativo caso seja uma instrução beq
 		--BranchNE,	-- ativo caso seja uma instrução bne
 		--BranchLT		-- ativo caso seja uma instrução blt
 		--BranchGE,	-- ativo caso seja uma instrução bge
@@ -35,6 +35,7 @@ begin
 			ALUSrc <= '0';
 			RegWrite <= '1';
 			ALUOp <= TIPO_R;
+			Branch <= '0';
 		
 		-- Load Word
 		elsif ( opcode = "0000011" ) then
@@ -43,6 +44,7 @@ begin
 			ALUSrc <= '1';
 			RegWrite <= '1';
 			ALUOp <= TIPO_I;
+			Branch <= '0';
 			
 		-- Tipo I
 		elsif ( opcode = "0010011" ) then
@@ -51,6 +53,7 @@ begin
 			ALUSrc <= '1';
 			RegWrite <= '1';
 			ALUOp <= TIPO_I;
+			Branch <= '0';
 		
 		-- Tipo SW
 		elsif ( opcode = "0100011" ) then
@@ -59,6 +62,7 @@ begin
 			ALUSrc <= '1';
 			RegWrite <= '0';
 			ALUOp <= TIPO_SW;
+			Branch <= '0';
 		
 		-- Tipo U
 		--elsif ( opcode = "0110111" ) then
@@ -67,7 +71,16 @@ begin
 		--elsif ( opcode = "1101111" ) then
 		
 		-- Tipo B
-		--elsif ( opcode = "1100011" ) then
+		elsif ( opcode = "1100011"   			-- BEQ
+			  or opcode = "1100011"	  			-- BNE
+			  or opcode = "1100011"	  			-- BLT
+			  or opcode = "1100011" ) then 	-- BGE
+			MemtoReg <= '0'; -- don't care.
+			MemWrite <= '0'; 
+			ALUSrc <= '0';
+			RegWrite <= '0';
+			ALUOp <= TIPO_B;
+			Branch <= '1';
 		end if;
 		
 	end process;

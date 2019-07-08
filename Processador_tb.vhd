@@ -18,6 +18,7 @@ component Processador is
 		saidaInstr 	: out std_logic_vector(31 downto 0);
 		
 		-- Sinais de controle
+		ctr_branch,
 		ctr_memtoreg,
 		ctr_memwrite,
 		ctr_alusrc,
@@ -26,7 +27,7 @@ component Processador is
 		ctr_operacao_ULA : out ULA_OP;
 		
 		saida_adderpc4,
-		saida_adderpcimm,
+		saida_adderpcshiftleft,
 		entrada_xregs_data,
 		
 		saida_xregs_ro1,
@@ -53,15 +54,16 @@ end component;
 	signal saida_pc		: std_logic_vector(7 downto 0);
 	signal saidaInstr 	: std_logic_vector(31 downto 0);
 		
-	signal 	ctr_memtoreg,
+	signal 	ctr_branch,
+				ctr_memtoreg,
 				ctr_memwrite,
 				ctr_alusrc,
-				ctr_regwrite : std_logic;
+				ctr_regwrite : std_logic := '0';
 	signal 	ctr_aluop	 : Controle_ULA;
 	signal 	ctr_operacao_ULA : ULA_OP;
 		
 	signal 	saida_adderpc4,
-				saida_adderpcimm,
+				saida_adderpcshiftleft,
 				entrada_xregs_data,
 				saida_xregs_ro1,
 				saida_xregs_ro2,
@@ -82,6 +84,7 @@ end component;
 		clockMem					=> clockMem,
 		saida_pc					=> saida_pc,
 		saidaInstr				=> saidaInstr,
+		ctr_branch				=> ctr_branch,
 		ctr_memtoreg			=> ctr_memtoreg,
 		ctr_memwrite			=> ctr_memwrite,
 		ctr_alusrc				=> ctr_alusrc,
@@ -89,7 +92,7 @@ end component;
 		ctr_aluop	 			=> ctr_aluop,
 		ctr_operacao_ULA 		=> ctr_operacao_ULA,
 		saida_adderpc4			=> saida_adderpc4,
-		saida_adderpcimm 		=> saida_adderpcimm, -- não tem ainda
+		saida_adderpcshiftleft 		=> saida_adderpcshiftleft, -- não tem ainda
 		entrada_xregs_data	=> entrada_xregs_data,
 		
 		saida_xregs_ro1 		=> saida_xregs_ro1,

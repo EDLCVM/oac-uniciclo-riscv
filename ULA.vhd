@@ -9,7 +9,7 @@ entity ULA is
 		opcode :  in ULA_OP;
 		A, B 	 :  in std_logic_vector(WSIZE-1 downto 0);
 		Z		 : out std_logic_vector(WSIZE-1 downto 0);
-		zero	 : out std_logic
+		zero	 : out std_logic := '0'
 		);
 end ULA;
 
