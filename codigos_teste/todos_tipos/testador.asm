@@ -1,5 +1,7 @@
 
 .text
+  jalr  ra, t1, 8    # Salta 2 instrucoes
+  add zero,zero,zero # Nao executa
   addi  t0, t0, 2    # t0 = 2
   addi  t1, t1, 3    # t1 = 3
   addi  t3, t3, 1024 # t3 = 1024
@@ -29,6 +31,11 @@ saltaBne:
   blt   t1, t2, naoSaltaBlt
   bge   t1, t2, saltaBge
 naoSaltaBlt:
-  addi t1,t1,2      # Nao Executa   
+  addi t1, t1, 2     # Nao Executa   
 saltaBge:
-  addi t1,t1,2	    # t1 = 10   
+  addi t1, t1, 2     # t1 = 10   
+  jal  saltoJal
+  add  t1, t1, t1    # Nao executa
+saltoJal:
+  addi t1, t1, 6     # t1 = 16
+  
