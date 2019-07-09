@@ -11,7 +11,7 @@ entity Controle is
 		DatatoReg,
 		JalR,			-- ativo caso seja uma instrução jalr
 		Jal,			-- ativo caso seja uma instrução jal
-		--Lui,			-- ativo caso seja uma instrução lui
+		Lui,			-- ativo caso seja uma instrução lui
 		MemtoReg,	-- 0 = resultado da ULA, 1 = resultado da memória de dados.
 		MemWrite,	-- ativo para escrever na memória de dados
 		ALUSrc,		-- 0 = resultado do registrador, 1 = imediato
@@ -37,6 +37,7 @@ begin
 			DatatoReg <= '0';
 			JalR <= '0';
 			Jal <= '0';
+			Lui <= '0';
 		
 		-- Load Word
 		elsif ( opcode = "0000011" ) then
@@ -49,6 +50,7 @@ begin
 			DatatoReg <= '0';
 			JalR <= '0';
 			Jal <= '0';
+			Lui <= '0';
 			
 		-- Tipo I
 		elsif ( opcode = "0010011" ) then
@@ -61,6 +63,7 @@ begin
 			DatatoReg <= '0';
 			JalR <= '0';
 			Jal <= '0';
+			Lui <= '0';
 		
 		-- Tipo SW
 		elsif ( opcode = "0100011" ) then
@@ -73,9 +76,22 @@ begin
 			DatatoReg <= '0';
 			JalR <= '0';
 			Jal <= '0';
+			Lui <= '0';
+		
 		
 		-- Tipo U
-		--elsif ( opcode = "0110111" ) then
+		elsif ( opcode = "0110111" ) then
+			ALUOp <= TIPO_U;
+			MemtoReg <= '0'; -- don't care.
+			MemWrite <= '0'; 
+			ALUSrc <= '1';
+			RegWrite <= '1';
+			Branch <= '0';
+			DatatoReg <= '0';
+			JalR <= '0';
+			Jal <= '0';
+			Lui <= '1';
+		
 		
 		-- Tipo JAL
 		elsif ( opcode = "1101111" ) then
@@ -88,6 +104,8 @@ begin
 			DatatoReg <= '1';
 			JalR <= '0';
 			Jal <= '1';
+			Lui <= '0';
+			
 			
 		-- tipo JALR
 		elsif ( opcode = "1100111" ) then
@@ -100,6 +118,7 @@ begin
 			DatatoReg <= '1';
 			JalR <= '1';
 			Jal <= '0';
+			Lui <= '0';
 		
 		-- Tipo B
 		elsif ( opcode = "1100011"   			-- BEQ
@@ -115,6 +134,8 @@ begin
 			DatatoReg <= '0';
 			JalR <= '0';
 			Jal <= '0';
+			Lui <= '0';
+			
 		end if;
 		
 	end process;

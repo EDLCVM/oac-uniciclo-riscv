@@ -65,6 +65,7 @@ architecture comportamento of Processador is
 	signal d_mux_memdados				: std_logic_vector(31 downto 0);
 	signal d_immgen						: std_logic_vector(31 downto 0);
 	signal d_mux_b_ula					: std_logic_vector(31 downto 0);
+	signal d_mux_lui                 : std_logic_vector(31 downto 0);
 	signal d_adder_mux_branch  		: std_logic_vector(31 downto 0);
 	signal d_entrada_pc					: std_logic_vector(7 downto 0);
 	signal d_saida_pc_4					: std_logic_vector(7 downto 0); -- saida dividida por 4
@@ -85,6 +86,7 @@ architecture comportamento of Processador is
 	signal ctrl_seletor_mux_pc : std_logic;
 	signal ctrl_jal,
 			 ctrl_jalr,
+			 ctrl_lui,
 			 ctrl_datatoreg		: std_logic;
 	
 begin
@@ -103,6 +105,7 @@ begin
 	ctr_operacao_ULA  <= ctrl_ctrlula;
 	ctr_jal <= ctrl_jal;
 	ctr_jalr <= ctrl_jalr;
+	ctrl_lui      <= ctrl_lui;
 	ctr_datatoreg <= ctrl_datatoreg;
 	
 	-- Dados
@@ -159,7 +162,8 @@ begin
 		ALUOp 	=> ctrl_aluop,
 		JalR		=> ctrl_jalr,
 		Jal		=> ctrl_jal,
-		DatatoReg => ctrl_datatoreg
+		DatatoReg => ctrl_datatoreg,
+		Lui      => ctrl_lui
 	);
 	
 	xregs: entity work.XREGS port map (
@@ -170,7 +174,7 @@ begin
 		rd 	=> d_meminstrucao(11 downto 7),
 		ro1 	=> d_xregs_ro1,
 		ro2 	=> d_xregs_ro2,
-		data 	=> d_mux_xreg_dado
+		data 	=> d_mux_lui
 	);
 	
 	ula: entity work.ULA port map (
@@ -219,6 +223,13 @@ begin
 		A 			=> d_xregs_ro2,
 		B 			=> d_immgen,
 		saida 	=> d_mux_b_ula
+	);
+	
+	mux_lui: entity work.Mux2x1 port map (
+		seletor 	=> ctrl_lui,
+		A 			=> d_immgen,
+		B 			=> d_mux_memdados,
+		saida 	=> d_mux_lui
 	);
 	
 	mux_pc4_branch: entity work.Mux2x1 port map (
