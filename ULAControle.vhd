@@ -117,5 +117,10 @@ begin
 					ALUOP <= ADD_OP;
 			end case;
 		end if;
+		
+		if ( ControleOp = TIPO_JUMP ) then
+			ALUOp <= ADD_OP;
+		end if;
+		
 	end process;
 end comportamento;

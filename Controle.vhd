@@ -8,11 +8,9 @@ entity Controle is
 	port(
 		Opcode 	: in std_logic_vector(6 downto 0);
 		Branch,		-- ativo caso seja uma instrução beq
-		--BranchNE,	-- ativo caso seja uma instrução bne
-		--BranchLT		-- ativo caso seja uma instrução blt
-		--BranchGE,	-- ativo caso seja uma instrução bge
-		--JalR,			-- ativo caso seja uma instrução jalr
-		--Jal,			-- ativo caso seja uma instrução jal
+		DatatoReg,
+		JalR,			-- ativo caso seja uma instrução jalr
+		Jal,			-- ativo caso seja uma instrução jal
 		--Lui,			-- ativo caso seja uma instrução lui
 		MemtoReg,	-- 0 = resultado da ULA, 1 = resultado da memória de dados.
 		MemWrite,	-- ativo para escrever na memória de dados
@@ -36,6 +34,9 @@ begin
 			RegWrite <= '1';
 			ALUOp <= TIPO_R;
 			Branch <= '0';
+			DatatoReg <= '0';
+			JalR <= '0';
+			Jal <= '0';
 		
 		-- Load Word
 		elsif ( opcode = "0000011" ) then
@@ -45,6 +46,9 @@ begin
 			RegWrite <= '1';
 			ALUOp <= TIPO_I;
 			Branch <= '0';
+			DatatoReg <= '0';
+			JalR <= '0';
+			Jal <= '0';
 			
 		-- Tipo I
 		elsif ( opcode = "0010011" ) then
@@ -54,6 +58,9 @@ begin
 			RegWrite <= '1';
 			ALUOp <= TIPO_I;
 			Branch <= '0';
+			DatatoReg <= '0';
+			JalR <= '0';
+			Jal <= '0';
 		
 		-- Tipo SW
 		elsif ( opcode = "0100011" ) then
@@ -63,12 +70,36 @@ begin
 			RegWrite <= '0';
 			ALUOp <= TIPO_SW;
 			Branch <= '0';
+			DatatoReg <= '0';
+			JalR <= '0';
+			Jal <= '0';
 		
 		-- Tipo U
 		--elsif ( opcode = "0110111" ) then
 		
-		-- Tipo J
-		--elsif ( opcode = "1101111" ) then
+		-- Tipo JAL
+		elsif ( opcode = "1101111" ) then
+			ALUOp <= TIPO_JUMP;
+			MemtoReg <= '0'; -- don't care.
+			MemWrite <= '0'; 
+			ALUSrc <= '0';
+			RegWrite <= '1';
+			Branch <= '0';
+			DatatoReg <= '1';
+			JalR <= '0';
+			Jal <= '1';
+			
+		-- tipo JALR
+		elsif ( opcode = "1100111" ) then
+			ALUOp <= TIPO_JUMP;
+			MemtoReg <= '0'; -- don't care.
+			MemWrite <= '0'; 
+			ALUSrc <= '1';
+			RegWrite <= '1';
+			Branch <= '0';
+			DatatoReg <= '1';
+			JalR <= '1';
+			Jal <= '0';
 		
 		-- Tipo B
 		elsif ( opcode = "1100011"   			-- BEQ
@@ -81,6 +112,9 @@ begin
 			RegWrite <= '0';
 			ALUOp <= TIPO_B;
 			Branch <= '1';
+			DatatoReg <= '0';
+			JalR <= '0';
+			Jal <= '0';
 		end if;
 		
 	end process;

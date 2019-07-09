@@ -54,7 +54,6 @@ begin
 	-- tipo UJ
 	elsif opcode = "1101111" then
 		imm32 <= std_logic_vector(resize(signed(instrucao(31) & instrucao(19 downto 12) & instrucao(20) & instrucao(30 downto 21) & '0'), 32));
-
 	else
 		imm32 <= X"00000000";
 	end if;
