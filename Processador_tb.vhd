@@ -18,6 +18,9 @@ component Processador is
 		saidaInstr 	: out std_logic_vector(31 downto 0);
 		
 		-- Sinais de controle
+		ctr_jal,
+		ctr_jalr,
+		ctr_datatoreg,
 		ctr_branch,
 		ctr_memtoreg,
 		ctr_memwrite,
@@ -33,7 +36,6 @@ component Processador is
 		saida_xregs_ro1,
 		saida_xregs_ro2,
 		saida_genimm32,
-		
 		entrada_ula_B,
 		saida_ula,
 		
@@ -58,7 +60,10 @@ end component;
 				ctr_memtoreg,
 				ctr_memwrite,
 				ctr_alusrc,
-				ctr_regwrite : std_logic := '0';
+				ctr_regwrite,
+				ctr_jal,
+				ctr_jalr,
+				ctr_datatoreg : std_logic := '0';
 	signal 	ctr_aluop	 : Controle_ULA;
 	signal 	ctr_operacao_ULA : ULA_OP;
 		
@@ -68,7 +73,6 @@ end component;
 				saida_xregs_ro1,
 				saida_xregs_ro2,
 				saida_genimm32,
-		
 				entrada_ula_B,
 				saida_ula,
 				saida_mux_memdados 	: std_logic_vector(31 downto 0) := X"00000000";
@@ -85,6 +89,9 @@ end component;
 		saida_pc					=> saida_pc,
 		saidaInstr				=> saidaInstr,
 		ctr_branch				=> ctr_branch,
+		ctr_jal					=> ctr_jal,
+		ctr_jalr					=> ctr_jalr,
+		ctr_datatoreg			=> ctr_datatoreg,
 		ctr_memtoreg			=> ctr_memtoreg,
 		ctr_memwrite			=> ctr_memwrite,
 		ctr_alusrc				=> ctr_alusrc,
@@ -98,7 +105,6 @@ end component;
 		saida_xregs_ro1 		=> saida_xregs_ro1,
 		saida_xregs_ro2		=> saida_xregs_ro2,
 		saida_genimm32			=> saida_genimm32,
-		
 		entrada_ula_B 			=> entrada_ula_B,
 		saida_ula				=> saida_ula,
 		

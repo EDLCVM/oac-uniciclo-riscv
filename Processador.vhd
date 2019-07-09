@@ -17,7 +17,10 @@ entity Processador is
 		ctr_memtoreg,
 		ctr_memwrite,
 		ctr_alusrc,
-		ctr_regwrite : out std_logic := '0';
+		ctr_regwrite,
+		ctr_jal,
+		ctr_jalr,
+		ctr_datatoreg	: out std_logic := '0';
 		ctr_aluop	 : out Controle_ULA;
 		ctr_operacao_ULA : out ULA_OP;
 		
@@ -29,6 +32,7 @@ entity Processador is
 		saida_xregs_ro2,
 		saida_genimm32,
 		
+		entrada_ula_A,
 		entrada_ula_B,
 		saida_ula,
 		
@@ -66,6 +70,10 @@ architecture comportamento of Processador is
 	signal d_saida_pc_4					: std_logic_vector(7 downto 0); -- saida dividida por 4
 	signal d_saida_adder_pc_offset 	: std_logic_vector(31 downto 0);
 	signal d_pc_32_bits					: std_logic_vector(31 downto 0);
+	signal d_mux_xreg_dado				: std_logic_vector(31 downto 0);
+	signal d_ula_not_0bit				: std_logic_vector(31 downto 0);
+	signal d_mux_pc4_branch_pcoffset	: std_logic_vector(31 downto 0);
+	signal d_mux_pc4branch_jalr		: std_logic_vector(31 downto 0);
 
 	signal ctrl_regwrite 		: std_logic 		:= '0';
 	signal ctrl_alusrc 			: std_logic 		:= '0';
@@ -75,6 +83,9 @@ architecture comportamento of Processador is
 	signal ctrl_branch 			: std_logic			:= '0';
 	signal ctrl_ctrlula			: ULA_OP;
 	signal ctrl_seletor_mux_pc : std_logic;
+	signal ctrl_jal,
+			 ctrl_jalr,
+			 ctrl_datatoreg		: std_logic;
 	
 begin
 
@@ -90,6 +101,9 @@ begin
 	ctr_regwrite	<= ctrl_regwrite;
 	ctr_aluop		<= ctrl_aluop;
 	ctr_operacao_ULA  <= ctrl_ctrlula;
+	ctr_jal <= ctrl_jal;
+	ctr_jalr <= ctrl_jalr;
+	ctr_datatoreg <= ctrl_datatoreg;
 	
 	-- Dados
 	saida_adderpc4 <= d_adder_mux_branch;
@@ -101,9 +115,10 @@ begin
 	saida_xregs_ro1 <= d_xregs_ro1;
 	saida_xregs_ro2 <= d_xregs_ro2;
 	saida_genimm32 <= d_immgen;
-		
+	
 	entrada_ula_B <= d_mux_b_ula;
 	saida_ula <= d_ula_saida;
+	d_ula_not_0bit <= std_logic_vector((d_ula_saida and "11111111111111111111111111111110"));
 	saida_mux_memdados <= d_mux_memdados;
 	
 	entrada_xregs_rs1 <= d_meminstrucao(19 downto 15);
@@ -118,7 +133,6 @@ begin
 	saida_adderpcshiftleft <= d_saida_adder_pc_offset;
 	
 	ctrl_seletor_mux_pc <= ctrl_branch and (d_ula_zero or d_ula_saida(0));
-	--ctrl_seletor_mux_pc <= '0';
 	
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
@@ -142,7 +156,10 @@ begin
 		MemWrite => ctrl_memwrite,
 		ALUSrc 	=> ctrl_alusrc,
 		RegWrite => ctrl_regwrite,
-		ALUOp 	=> ctrl_aluop
+		ALUOp 	=> ctrl_aluop,
+		JalR		=> ctrl_jalr,
+		Jal		=> ctrl_jal,
+		DatatoReg => ctrl_datatoreg
 	);
 	
 	xregs: entity work.XREGS port map (
@@ -153,7 +170,7 @@ begin
 		rd 	=> d_meminstrucao(11 downto 7),
 		ro1 	=> d_xregs_ro1,
 		ro2 	=> d_xregs_ro2,
-		data 	=> d_mux_memdados
+		data 	=> d_mux_xreg_dado
 	);
 	
 	ula: entity work.ULA port map (
@@ -204,11 +221,11 @@ begin
 		saida 	=> d_mux_b_ula
 	);
 	
-	mux_pc4_branch: entity work.Mux2x1_PC port map (
+	mux_pc4_branch: entity work.Mux2x1 port map (
 		seletor => ctrl_seletor_mux_pc,
 		A => d_adder_mux_branch,
 		B => d_saida_adder_pc_offset,
-		saida => d_entrada_pc
+		saida => d_mux_pc4branch_jalr
 	);
 	
 	adderpc_shiftleft: entity work.Adder port map (
@@ -217,4 +234,24 @@ begin
 		saida => d_saida_adder_pc_offset
 	);
 	
+	mux_xreg_dado: entity work.Mux2x1 port map (
+		seletor => ctrl_datatoreg,
+		A => d_mux_memdados,
+		B => d_adder_mux_branch,
+		saida => d_mux_xreg_dado
+	);
+	
+	mux_pc4branch_jalr: entity work.Mux2x1 port map (
+		seletor => ctrl_jalr,
+		A => d_mux_pc4branch_jalr,
+		B => d_ula_not_0bit,
+		saida => d_mux_pc4_branch_pcoffset
+	);
+	
+	mux_pc4_branch_pcoffset: entity work.Mux2x1_PC port map (
+		seletor => ctrl_jal,
+		A => d_mux_pc4_branch_pcoffset,
+		B => d_saida_adder_pc_offset,
+		saida => d_entrada_pc
+	);
 end comportamento;
