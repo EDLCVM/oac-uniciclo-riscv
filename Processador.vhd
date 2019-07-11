@@ -114,7 +114,7 @@ begin
 	
 			
 	-- saida_adderpcimm Não tem esse adder ainda,
-	entrada_xregs_data <= d_mux_memdados;
+	entrada_xregs_data <= d_mux_lui;
 		
 	saida_xregs_ro1 <= d_xregs_ro1;
 	saida_xregs_ro2 <= d_xregs_ro2;
@@ -136,7 +136,7 @@ begin
 	
 	saida_adderpcshiftleft <= d_saida_adder_pc_offset;
 	
-	ctrl_seletor_mux_pc <= ctrl_branch and (d_ula_zero or d_ula_saida(0));
+	ctrl_seletor_mux_pc <= ctrl_branch and d_ula_saida(0);
 	
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (

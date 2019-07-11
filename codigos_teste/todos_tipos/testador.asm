@@ -38,4 +38,5 @@ saltaBge:
   add  t1, t1, t1    # Nao executa
 saltoJal:
   addi t1, t1, 6     # t1 = 16
+  lui t1, -1
   

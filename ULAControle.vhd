@@ -99,7 +99,7 @@ begin
 			case funct3 is
 				-- BEQ
 				when "000" =>
-					ALUOP <= SUB_OP;
+					ALUOP <= SEQ_OP;
 			
 				-- BNE
 				when "001" =>
