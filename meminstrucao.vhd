@@ -42,11 +42,11 @@ USE altera_mf.all;
 ENTITY meminstrucao IS
 	PORT
 	(
-		address	: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		address		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
 		clock		: IN STD_LOGIC  := '1';
 		data		: IN STD_LOGIC_VECTOR (31 DOWNTO 0);
 		wren		: IN STD_LOGIC ;
-		q			: OUT STD_LOGIC_VECTOR (31 DOWNTO 0) := X"00000000"
+		q		: OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
 	);
 END meminstrucao;
 
@@ -54,7 +54,9 @@ END meminstrucao;
 ARCHITECTURE SYN OF meminstrucao IS
 
 	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (31 DOWNTO 0);
-	
+
+
+
 	COMPONENT altsyncram
 	GENERIC (
 		clock_enable_input_a		: STRING;
@@ -88,7 +90,7 @@ BEGIN
 	GENERIC MAP (
 		clock_enable_input_a => "BYPASS",
 		clock_enable_output_a => "BYPASS",
-		init_file => "codigo.mif",
+		init_file => "codigo.hex",
 		intended_device_family => "Cyclone II",
 		lpm_hint => "ENABLE_RUNTIME_MOD=NO",
 		lpm_type => "altsyncram",
@@ -135,7 +137,7 @@ END SYN;
 -- Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "0"
 -- Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 -- Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
--- Retrieval info: PRIVATE: MIFfilename STRING "codigo.mif"
+-- Retrieval info: PRIVATE: MIFfilename STRING "codigo.hex"
 -- Retrieval info: PRIVATE: NUMWORDS_A NUMERIC "256"
 -- Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "0"
 -- Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_PORT_A NUMERIC "3"
@@ -152,7 +154,7 @@ END SYN;
 -- Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_A STRING "BYPASS"
--- Retrieval info: CONSTANT: INIT_FILE STRING "codigo.mif"
+-- Retrieval info: CONSTANT: INIT_FILE STRING "codigo.hex"
 -- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone II"
 -- Retrieval info: CONSTANT: LPM_HINT STRING "ENABLE_RUNTIME_MOD=NO"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
