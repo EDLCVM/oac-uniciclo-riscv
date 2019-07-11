@@ -74,7 +74,7 @@ begin
 				
 			-- SRLI / SRAI
 			when "101" =>
-				if ( funct7 = "000000") then
+				if ( funct7(6 downto 1) = "000000") then
 						ALUOp <= SRL_OP;
 				else
 					ALUOp <= SRA_OP;
