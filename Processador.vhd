@@ -76,7 +76,10 @@ architecture comportamento of Processador is
 	signal d_ula_not_0bit				: std_logic_vector(31 downto 0);
 	signal d_mux_pc4_branch_pcoffset	: std_logic_vector(31 downto 0);
 	signal d_mux_pc4branch_jalr		: std_logic_vector(31 downto 0);
-
+	signal d_entrada_xregs_data		: std_logic_vector(31 downto 0);
+	signal d_mux_pc4_xregs				: std_logic_vector(31 downto 0);
+	
+	signal ctrl_jalr_jal			: std_logic;
 	signal ctrl_regwrite 		: std_logic 		:= '0';
 	signal ctrl_alusrc 			: std_logic 		:= '0';
 	signal ctrl_memwrite 		: std_logic 		:= '0';
@@ -114,7 +117,7 @@ begin
 	
 			
 	-- saida_adderpcimm Não tem esse adder ainda,
-	entrada_xregs_data <= d_mux_lui;
+	entrada_xregs_data <= d_mux_xreg_dado;
 		
 	saida_xregs_ro1 <= d_xregs_ro1;
 	saida_xregs_ro2 <= d_xregs_ro2;
@@ -123,7 +126,7 @@ begin
 	entrada_ula_B <= d_mux_b_ula;
 	saida_ula <= d_ula_saida;
 	d_ula_not_0bit <= std_logic_vector((d_ula_saida and "11111111111111111111111111111110"));
-	saida_mux_memdados <= d_mux_memdados;
+	saida_mux_memdados <= d_memdados;
 	
 	entrada_xregs_rs1 <= d_meminstrucao(19 downto 15);
 	entrada_xregs_rs2 <= d_meminstrucao(24 downto 20);
@@ -131,12 +134,15 @@ begin
 	entrada_xregs_rd <= d_meminstrucao(11 downto 7);
 	
 	d_saida_pc_4 <= std_logic_vector(unsigned(d_pc_meminstrucao) / 4);
+	d_entrada_xregs_data <= std_logic_vector(unsigned(d_xregs_ro2) / 4);
 	
 	d_pc_32_bits <= std_logic_vector(resize(unsigned(d_pc_meminstrucao), 32));
 	
 	saida_adderpcshiftleft <= d_saida_adder_pc_offset;
 	
 	ctrl_seletor_mux_pc <= ctrl_branch and d_ula_saida(0);
+	
+	ctrl_jalr_jal <= ctrl_jal or ctrl_jalr;
 	
 --- ------- Conexão entre os componentes -------
 	pc: entity work.PC port map (
@@ -175,7 +181,7 @@ begin
 		rd 	=> d_meminstrucao(11 downto 7),
 		ro1 	=> d_xregs_ro1,
 		ro2 	=> d_xregs_ro2,
-		data 	=> d_mux_lui
+		data 	=> d_mux_pc4_xregs
 	);
 	
 	ula: entity work.ULA port map (
@@ -187,7 +193,7 @@ begin
 	);
 	
 	memdados: entity work.memdados port map (
-		address 	=> d_ula_saida(7 downto 0),
+		address 	=> d_ula_saida(9 downto 2),
 		clock 	=> clockMem,
 		data 		=> d_xregs_ro2,
 		wren 		=> ctrl_memwrite,
@@ -231,6 +237,13 @@ begin
 		A 			=> d_mux_memdados,
 		B 			=> d_immgen,
 		saida 	=> d_mux_lui
+	);
+	
+	mux_pc4_xregs: entity work.Mux2x1 port map (
+		seletor => ctrl_jalr_jal,
+		A => d_mux_lui,
+		B => d_adder_mux_branch,
+		saida => d_mux_pc4_xregs
 	);
 	
 	mux_pc4_branch: entity work.Mux2x1 port map (

@@ -45,7 +45,7 @@ begin
 			MemWrite <= '0';
 			ALUSrc <= '1';
 			RegWrite <= '1';
-			ALUOp <= TIPO_I;
+			ALUOp <= TIPO_LW;
 			Branch <= '0';
 			DatatoReg <= '0';
 			JalR <= '0';
