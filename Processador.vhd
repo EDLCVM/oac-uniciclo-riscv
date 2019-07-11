@@ -20,9 +20,10 @@ entity Processador is
 		ctr_regwrite,
 		ctr_jal,
 		ctr_jalr,
-		ctr_datatoreg	: out std_logic := '0';
-		ctr_aluop	 : out Controle_ULA;
-		ctr_operacao_ULA : out ULA_OP;
+		ctr_datatoreg,
+		ctr_lui				: out std_logic := '0';
+		ctr_aluop	 		: out Controle_ULA;
+		ctr_operacao_ULA 	: out ULA_OP;
 		
 		saida_adderpc4,
 		saida_adderpcshiftleft,
@@ -103,10 +104,10 @@ begin
 	ctr_regwrite	<= ctrl_regwrite;
 	ctr_aluop		<= ctrl_aluop;
 	ctr_operacao_ULA  <= ctrl_ctrlula;
-	ctr_jal <= ctrl_jal;
-	ctr_jalr <= ctrl_jalr;
-	ctrl_lui      <= ctrl_lui;
-	ctr_datatoreg <= ctrl_datatoreg;
+	ctr_jal 			<= ctrl_jal;
+	ctr_jalr 		<= ctrl_jalr;
+	ctr_lui      	<= ctrl_lui;
+	ctr_datatoreg 	<= ctrl_datatoreg;
 	
 	-- Dados
 	saida_adderpc4 <= d_adder_mux_branch;
@@ -227,8 +228,8 @@ begin
 	
 	mux_lui: entity work.Mux2x1 port map (
 		seletor 	=> ctrl_lui,
-		A 			=> d_immgen,
-		B 			=> d_mux_memdados,
+		A 			=> d_mux_memdados,
+		B 			=> d_immgen,
 		saida 	=> d_mux_lui
 	);
 	

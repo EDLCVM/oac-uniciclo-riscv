@@ -25,7 +25,8 @@ component Processador is
 		ctr_memtoreg,
 		ctr_memwrite,
 		ctr_alusrc,
-		ctr_regwrite : out std_logic;
+		ctr_regwrite,
+		ctr_lui				: out std_logic;
 		ctr_aluop	 : out Controle_ULA;
 		ctr_operacao_ULA : out ULA_OP;
 		
@@ -63,7 +64,8 @@ end component;
 				ctr_regwrite,
 				ctr_jal,
 				ctr_jalr,
-				ctr_datatoreg : std_logic := '0';
+				ctr_datatoreg,
+			   ctr_lui			: std_logic := '0';
 	signal 	ctr_aluop	 : Controle_ULA;
 	signal 	ctr_operacao_ULA : ULA_OP;
 		
@@ -98,6 +100,7 @@ end component;
 		ctr_regwrite 			=> ctr_regwrite,
 		ctr_aluop	 			=> ctr_aluop,
 		ctr_operacao_ULA 		=> ctr_operacao_ULA,
+		ctr_lui					=> ctr_lui,
 		saida_adderpc4			=> saida_adderpc4,
 		saida_adderpcshiftleft 		=> saida_adderpcshiftleft, -- não tem ainda
 		entrada_xregs_data	=> entrada_xregs_data,
